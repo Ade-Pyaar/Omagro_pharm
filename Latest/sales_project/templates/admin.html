@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <article class="media content-section">
+        <div class="media-body">
+            <h4 class="mb-3 article-content">Total sales for today: {{ number }}</h4>
+            <h4 class="mb-3 article-content">Total money for today: ₦{{ total_money }}</h4>
+        </div>
+    </article>
+    <h4 class="mb-3 ">------- Sales for Today -------</h4>
+    {% for sale in all_sales[::-1] %}
+        {% if sale.date_sold.strftime('%Y %m %d') == date %}
+
+            <article class="media content-section">
+              <div class="media-body">
+                <div class="article-metadata">
+                  <a class="mr-2" >User: {{ sale.author.name }}</a>
+                </div>
+                <h2 class="article-title">{{ sale.name_of_item }}</h2>
+                <p class="article-content">Quantity: {{ sale.quantity }}</p>
+                <p class="article-content">Price: ₦{{ sale.price }}</p>
+              </div>
+            </article>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

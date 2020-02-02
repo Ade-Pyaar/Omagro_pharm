@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="content-section">
+        <form method="POST" action="" autocomplete="off">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">New Sales</legend>
+                <div class="form-group">
+                    {{ form.name.label(class="form-control-label") }}
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.name(class="form-control form-control-lg", id="nameOfItem") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                     {{ form.quantity.label(class="form-control-label") }}
+                     {% if form.quantity.errors %}
+                        {{ form.quantity(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.quantity.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.quantity(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                     {{ form.price.label(class="form-control-label") }}
+                     {% if form.price.errors %}
+                        {{ form.price(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.price.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.price(class="form-control form-control-lg", id='myInput', onkeypress="myFunction()") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="enter-modal">Enter</button>
+                {{ form.submit(hidden='true', id='form-submit') }}
+            </div>
+        </form>
+        <br/>
+        <a href="{{ url_for('sales') }}"><button type="button" style="width:100px; height:30px;">Go Back</button></a>
+
+    </div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Sale Entry</h5>
+      </div>
+      <div class="modal-body">
+          Are You Sure you Want To Save This Entry?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Go Back</button>
+          <button type="button" class="btn btn-success success" onclick="myFunc()" data-dismiss="modal" id="modal_confirm" onkeyup="preventModal()">Confirm</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='predict.js') }}"></script>
+
+{% endblock content %}
