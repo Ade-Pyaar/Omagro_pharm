@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <script type="text/javascript" src="{{ url_for('static', filename='dropdown.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dropdown.css') }}">
+
+    {% for product in all_product.items %}
+    <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">
+            <a href="{{ url_for('edit_product', product_name=product.name) }}" class="btn btn-link">{{ product.name }}</a>
+          </div>
+        </div>
+      </div><br>
+    {% endfor %}
+    {% for page_num in all_product.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if all_product.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('all_products', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('all_products', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

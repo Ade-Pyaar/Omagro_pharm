@@ -32,8 +32,10 @@ class Sales(db.Model):
 
 class Products(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name_of_product = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    quantity = db.Column(db.String(10), nullable=False)
     price = db.Column(db.Integer, nullable=False)
+    expiring_date = db.Column(db.String(12), nullable=False)
 
     def __repr__(self):
-        return f"Product('{self.name_of_product}', '{self.price}')"
+        return f"Product('{self.name}', '{self.price}')"

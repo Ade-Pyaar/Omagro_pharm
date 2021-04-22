@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS and Javascript -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootjs.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='pooper.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='mine.js') }}"></script>
+
+    <!-- favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <title>{{ title }}</title>
+
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <div class="container">
+                <a class="navbar-brand mr-4" href="/">Omagro Pharmacy</a>
+                <a class="navbar-brand mr-4">Admin</a>
+                
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{{ url_for('notification') }}">Notifications</a>
+                    <a class="nav-item nav-link" href="{{ url_for('admin') }}">Admin Page</a>
+                    <a class="nav-item nav-link" href="{{ url_for('sales') }}">Sales</a>
+                    <div class="navbar-nav">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                                More Actions
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ url_for('all_products') }}">All Products</a>
+                                <a class="dropdown-item" href="{{ url_for('new_product') }}">Add a new product</a>
+                                <a class="dropdown-item" href="{{ url_for('previous_sales') }}">Previous Sales</a>
+                                <a class="dropdown-item" href="{{ url_for('account') }}">Account</a>
+                                <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <main role="main" class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </main>
+
+    <a href="{{ url_for('all_products') }}" class="btn btn-primary">Go Back</a><br><br>
+    <p>New Products Form</p>
+
+    <form class="form-inline" method="POST" autocomplete="off" id="my_form">
+        <div class="form-group mr-3 mb-3">
+        <label for="name1">Name:</label>
+        <input type="text" class="form-control" id="name1" placeholder="Name of product" name="name1">
+        </div>
+        <div class="form-group mr-3 mb-3">
+        <label for="price1">Price:</label>
+        <input type="text" class="form-control" id="price1" placeholder="Price" name="price1">
+        </div>
+        <div class="form-group mb-3 mr-3">
+        <label for="quantity1">Quantity:</label>
+        <input type="text" class="form-control" id="quantity1" placeholder="Quantity" name="quantity1">
+        </div>
+        <div class="form-group mb-3">
+        <label for="expiring_date1">Expiring Date:</label>
+        <input type="text" class="form-control" id="expiring_date1" placeholder="Expiring Date" name="expiring_date1">
+        </div>
+        
+        
+    </form><br>
+
+    <div class="text-right">
+        <button type="submit" class="btn btn-success" form="my_form">Submit</button>
+    </div>
+    <button id="add_form" class="btn btn-info">Add Form</button>
+
+    <script>
+        let form = document.querySelector('#my_form')
+        let btn = document.querySelector('#add_form')
+        window.num = 1
+
+        btn.addEventListener('click', () => {
+            ++window.num
+            let  newElement = document.createElement('div')
+            let  newElement2 = document.createElement('div')
+            let  newElement3 = document.createElement('div')
+            let  newElement4 = document.createElement('div')
+
+            newElement.classList.add('mb-3')
+            newElement.classList.add('mr-3')
+            newElement.classList.add('form-group')
+
+            newElement2.classList.add('mb-3')
+            newElement2.classList.add('mr-3')
+            newElement2.classList.add('form-group')
+
+            newElement3.classList.add('mb-3')
+            newElement3.classList.add('mr-3')
+            newElement3.classList.add('form-group')
+
+            newElement4.classList.add('mb-3')
+            newElement4.classList.add('mr-3')
+            newElement4.classList.add('form-group')
+
+            newElement.innerHTML = `
+            <label for="name${window.num}">Name:</label>
+            <input type="text" class="form-control" id="name${window.num}" placeholder="Name of product" name="name${window.num}">
+            `
+            newElement2.innerHTML = `
+            <label for="price${window.num}">Price:</label>
+            <input type="text" class="form-control" id="price${window.num}" placeholder="Price" name="price${window.num}">
+            `
+
+            newElement3.innerHTML = `
+            <label for="quantity${window.num}">Quantity:</label>
+            <input type="text" class="form-control" id="quantity${window.num}" placeholder="Quantity" name="quantity${window.num}">
+            `
+
+            newElement4.innerHTML = `
+            <label for="expiring_date${window.num}">Expiring Date:</label>
+            <input type="text" class="form-control" id="expiring_date${window.num}" placeholder="Expiring Date" name="expiring_date${window.num}">
+            `
+
+            form.append(newElement)
+            form.append(newElement2)
+            form.append(newElement3)
+            form.append(newElement4)
+        })
+    </script>
+</body>
+</html>

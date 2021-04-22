@@ -7,19 +7,29 @@
         </div>
     </article>
     <h4 class="mb-3 ">------- Sales for Today -------</h4>
-    {% for sale in all_sales[::-1] %}
-        {% if sale.date_sold.strftime('%Y %m %d') == date %}
-
+    {% for sale in all_sales.items %}
+        {% if sale.date_sold.strftime('%Y %m %d') == date%}
             <article class="media content-section">
-              <div class="media-body">
+            <div class="media-body">
                 <div class="article-metadata">
-                  <a class="mr-2" >User: {{ sale.author.name }}</a>
+                <a class="mr-2" >Seller: {{ sale.author.name }}</a>
+                <p class="text-muted">Date: {{ sale.date_sold.strftime('%d-%m-%Y %H:%M') }}</p>
                 </div>
                 <h2 class="article-title">{{ sale.name_of_item }}</h2>
                 <p class="article-content">Quantity: {{ sale.quantity }}</p>
                 <p class="article-content">Price: ₦{{ sale.price }}</p>
-              </div>
+            </div>
             </article>
+        {% endif %}
+    {% endfor %}
+
+    {% for page_num in all_sales.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if all_sales.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('admin', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('admin', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endblock %}

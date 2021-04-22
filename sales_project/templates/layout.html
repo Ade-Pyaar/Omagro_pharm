@@ -9,6 +9,13 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootjs.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='pooper.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='mine.js') }}"></script>
+
+    <!-- favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
 
     <title>{{ title }}</title>
 
@@ -28,41 +35,39 @@
           <div class="navbar-nav">
               {% if current_user.is_authenticated %}
                   {% if current_user.name == 'Adekunle' %}
+                  <a class="nav-item nav-link" href="{{ url_for('notification') }}">Notifications</a>
                       <a class="nav-item nav-link" href="{{ url_for('admin') }}">Admin Page</a>
                       <a class="nav-item nav-link" href="{{ url_for('sales') }}">Sales</a>
                       <div class="navbar-nav">
-
-
                           <div class="dropdown">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                               More Actions
                             </button>
                             <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ url_for('all_products') }}">All Products</a>
                                 <a class="dropdown-item" href="{{ url_for('new_product') }}">Add a new product</a>
-                                <a class="dropdown-item" href="{{ url_for('edit_product') }}">Edit a product</a>
                                 <a class="dropdown-item" href="{{ url_for('previous_sales') }}">Previous Sales</a>
                                 <a class="dropdown-item" href="{{ url_for('account') }}">Account</a>
                                 <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
                             </div>
                           </div>
-
                       </div>
                   {% else %}
                       <a class="nav-item nav-link" href="{{ url_for('sales') }}">Sales</a>
                       <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
                       <a class="nav-item nav-link" href="{{ url_for('logout') }}">Log Out</a>
                   {% endif %}
-
               {% else %}
                   <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
                   <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
                   <a class="nav-item nav-link" href="{{ url_for('admin_login') }}">Admin</a>
               {% endif %}
-            </div>
           </div>
         </div>
       </nav>
     </header>
+
+
     <main role="main" class="container">
         <div class="row">
             <div class="col-md-6">
@@ -79,9 +84,6 @@
             </div>
         </div>
     </main>
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootjs.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='pooper.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='mine.js') }}"></script>
+
 </body>
 </html>

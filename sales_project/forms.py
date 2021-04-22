@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+from wtforms.fields.core import DateTimeField
 from wtforms.validators import DataRequired, EqualTo, ValidationError
 from sales_project.models import User, Products
 from flask_login import current_user
@@ -26,6 +27,8 @@ class Loginform(FlaskForm):
 
 class Updateform(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Update')
 
     def validate_name(self, name):
@@ -49,20 +52,3 @@ class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
-
-
-class NewProductForm(FlaskForm):
-    name = StringField('Name of item', validators=[DataRequired()])
-    price = IntegerField('Price', validators=[DataRequired()])
-    submit = SubmitField('Edit Product')
-
-
-class EditProductForm(FlaskForm):
-    name = StringField('Name of item', validators=[DataRequired()])
-    price = IntegerField('Price', validators=[DataRequired()])
-    submit = SubmitField('Edit Product')
-
-    def validate_name(self, name):
-        item = Products.query.filter_by(name=name.data).first()
-        if item:
-            raise ValidationError('This product already exists.')

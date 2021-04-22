@@ -5,13 +5,13 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dropdown.css') }}">
     {% endif %}
     {% if current_user.name != 'Adekunle' %}
-        <a class="btn btn-info mb-4" href="{{ url_for('new_sales') }}" style="width:120px; height:50px;">New Sales</a>
+        <a class="btn btn-info mb-4" href="{{ url_for('new_sales') }}" style="width:120px; height:40px;">New Sales</a>
     {% endif %}
     {% for sale in all_sales.items %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" >User: {{ sale.author.name }}</a>
+              <a class="mr-2" >Seller: {{ sale.author.name }}</a>
               <p class="text-muted">Date: {{ sale.date_sold.strftime('%d-%m-%Y %H:%M') }}</p>
             </div>
             <h2 class="article-title">{{ sale.name_of_item }}</h2>
