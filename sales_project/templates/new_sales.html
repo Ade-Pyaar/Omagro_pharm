@@ -1,58 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS and Javascript -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootjs.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='pooper.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='mine.js') }}"></script>
-
-    <!-- favicon -->
-    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
-
-    <title>{{ title }}</title>
-
-  </head>
-
-  <body>
-    <header class="site-header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="/">Omagro Pharmacy</a>
-              <a class="navbar-brand mr-4">User: {{ current_user.name }}</a>
-          <div class="navbar-nav">
-              {% if current_user.is_authenticated %}
-                      <a class="nav-item nav-link" href="{{ url_for('sales') }}">Sales</a>
-                      <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
-                      <a class="nav-item nav-link" href="{{ url_for('logout') }}">Log Out</a>
-              {% else %}
-                  <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                  <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
-                  <a class="nav-item nav-link" href="{{ url_for('admin_login') }}">Admin</a>
-              {% endif %}
-          </div>
-        </div>
-      </nav>
-    </header>
-    <main role="main" class="container">
-        
-      {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-              {% for category, message in messages %}
-                  <div class="alert alert-{{ category }}">
-                      {{ message }}
-                  </div>
-              {% endfor %}
-          {% endif %}
-      {% endwith %}            
-    </main>
+{% extends 'custom_layout.html' %}
+{% block content %}
     
     <div class="container">
       <a href="{{ url_for('sales') }}" class="btn btn-primary">Go Back</a><br><br>
@@ -174,5 +121,4 @@
       })
             
     </script>
-  </body>
-</html>
+{% endblock %}

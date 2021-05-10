@@ -10,6 +10,7 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    add_product = db.Column(db.Boolean, nullable=False)
     name = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     sales = db.relationship('Sales', backref='author', lazy=True)
@@ -33,7 +34,7 @@ class Sales(db.Model):
 class Products(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    quantity = db.Column(db.String(10), nullable=False)
+    quantity = db.Column(db.String(30), nullable=False)
     price = db.Column(db.Integer, nullable=False)
     expiring_date = db.Column(db.String(12), nullable=False)
 

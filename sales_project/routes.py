@@ -16,12 +16,12 @@ def admin_login():
         return redirect(url_for('admin'))
     form = Loginform()
     if form.validate_on_submit():
-        if form.name.data == 'Adekunle':
+        if form.name.data == 'Adekunle Adebayo':
             user = User.query.filter_by(name=form.name.data).first()
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
                 flash(f"Welcome Admin: {form.name.data}!", 'success')
-                return redirect(url_for('admin'))
+                return redirect(url_for('login'))
             else:
                 flash('Login unsuccessful, please check the name and password', 'danger')
         else:
@@ -33,10 +33,52 @@ def admin_login():
 
 
 
+@app.route('/admin/accounts', methods=['GET'])
+def list_accounts():
+    all_users = User.query.all()
+    total_users = []
+    for user in all_users:
+        if user.name != 'Adekunle Adebayo':
+            total_users.append(user)
+
+    return render_template('all_users.html', title='All Accounts', total_users=total_users)
+
+
+
+
+
+
+@app.route('/admin/edit/<string:account_name>/', methods=['GET', 'POST'])
+def admin_edit_account(account_name):
+    if current_user.name != 'Adekunle Adebayo':
+        flash('You are not allowed to access this page', 'danger')
+        return redirect(url_for('sales'))
+
+    user = User.query.filter_by(name=account_name).first()
+
+    if request.method == "POST":
+        name = request.form.get('name')
+        add_product = True if request.form.get('add_product') == 'yes' else False
+
+
+        update_dict = {User.add_product:add_product}
+
+        User.query.filter_by(name=name).update(update_dict)
+        db.session.commit()
+
+        flash('You have successfully updated the account', 'success')
+        return redirect(url_for('list_accounts'))
+
+    return render_template('admin_edit_account.html', title='Update Account', user=user)
+
+
+
+
+
 @app.route('/admin')
 @login_required
 def admin():
-    if current_user.name != 'Adekunle':
+    if current_user.name != 'Adekunle Adebayo':
         flash("You are not allowed to access this page", "danger")
         return redirect(url_for('login'))
     else:
@@ -62,7 +104,8 @@ def register():
     form = Regform()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(name=form.name.data, password=hashed_password)
+        product_permission = True if form.name.data == "Adekunle Adebayo" else False
+        user = User(name=form.name.data, password=hashed_password, add_product=product_permission)
         db.session.add(user)
         db.session.commit()
         flash(f"Account created for {form.name.data}, you can now login ", 'success')
@@ -80,7 +123,7 @@ def login():
         return redirect(url_for('sales'))
     form = Loginform()
     if form.validate_on_submit():
-        if form.name.data == 'Adekunle':
+        if form.name.data == 'Adekunle Adebayo':
             flash("You can't login there, login here", 'danger')
             return redirect(url_for('admin_login'))
         else:
@@ -140,15 +183,15 @@ def account():
 
 
 
-@app.route('/account/delete')
-def delete_account():
+@app.route('/account/delete/<string:account_name>/', methods=["POST', 'GET"])
+def delete_account(account_name):
 
-    user = User.query.filter_by(name=current_user.name).first()
+    user = User.query.filter_by(name=account_name).first()
     db.session.delete(user)
     db.session.commit()
 
-    flash('Your account has been deleted', 'success')
-    return redirect(url_for('login'))
+    flash('This account has been deleted', 'success')
+    return redirect(url_for('list_accounts'))
 
 
 
@@ -206,7 +249,7 @@ def reset_token(token):
 @app.route('/product/new', methods=['GET', 'POST'])
 @login_required
 def new_product():
-    if current_user.name != 'Adekunle':
+    if not current_user.add_product:
         flash('You are not allowed to access this page', 'danger')
         return redirect(url_for('sales'))
     
@@ -234,7 +277,7 @@ def new_product():
 @app.route('/all_product')
 @login_required
 def all_products():
-    if current_user.name != 'Adekunle':
+    if current_user.name != 'Adekunle Adebayo':
         flash('You are not allowed to access this page', 'danger')
         return redirect(url_for('sales'))
 
@@ -251,7 +294,7 @@ def all_products():
 @app.route('/product/edit/<string:product_name>/', methods=['GET', 'POST'])
 @login_required
 def edit_product(product_name):
-    if current_user.name != 'Adekunle':
+    if current_user.name != 'Adekunle Adebayo':
         flash('You are not allowed to access this page', 'danger')
         return redirect(url_for('sales'))
 
@@ -297,7 +340,7 @@ def delete_product(product_name):
 @app.route('/sales/previous', methods=['GET', 'POST'])
 @login_required
 def previous_sales():
-    if current_user.name != 'Adekunle':
+    if current_user.name != 'Adekunle Adebayo':
         flash("You are not allowed to access this page", "danger")
         return redirect(url_for('login'))
     else:
@@ -314,7 +357,7 @@ def previous_sales():
 @app.route('/sales/new', methods=["POST", "GET"])
 @login_required
 def new_sales():
-    if current_user.name == 'Adekunle':
+    if current_user.name == 'Adekunle Adebayo':
         flash("You are not allowed to access the new sales page", 'danger')
         return redirect(url_for('admin'))
 
@@ -347,7 +390,7 @@ def new_sales():
 @app.route('/notifications')
 @login_required
 def notification():
-    if current_user.name != 'Adekunle':
+    if current_user.name != 'Adekunle Adebayo':
         flash('You are not allowed to access this page', 'danger')
         return redirect(url_for('sales'))
 
@@ -361,7 +404,7 @@ def notification():
         start_date = datetime.strptime(today, "%Y-%m-%d")
         end_date = datetime.strptime(end_date.replace(' ', '-'), "%Y-%m-%d")
 
-        if (end_date - start_date).days <= 30:
+        if (end_date - start_date).days <= 90:
             final_product.append(product.name)
 
     return render_template('notifications.html', title='Sales', all_products=all_products, final_product=final_product)
