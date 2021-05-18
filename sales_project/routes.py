@@ -34,7 +34,11 @@ def admin_login():
 
 
 @app.route('/admin/accounts', methods=['GET'])
+@login_required
 def list_accounts():
+    if current_user.name != 'Adekunle Adebayo':
+        flash('You are not allowed to access this page', 'danger')
+        return redirect(url_for('sales'))
     all_users = User.query.all()
     total_users = []
     for user in all_users:
@@ -49,6 +53,7 @@ def list_accounts():
 
 
 @app.route('/admin/edit/<string:account_name>/', methods=['GET', 'POST'])
+@login_required
 def admin_edit_account(account_name):
     if current_user.name != 'Adekunle Adebayo':
         flash('You are not allowed to access this page', 'danger')
@@ -65,6 +70,7 @@ def admin_edit_account(account_name):
 
         User.query.filter_by(name=name).update(update_dict)
         db.session.commit()
+        # db.session.close()
 
         flash('You have successfully updated the account', 'success')
         return redirect(url_for('list_accounts'))
@@ -86,7 +92,8 @@ def admin():
         total_money, number = 0, 0
         page = request.args.get('page', 1, type=int)
         all_sales = Sales.query.order_by(Sales.date_sold.desc()).paginate(page=page, per_page=7)
-        for sale in all_sales.items:
+        total_sales = Sales.query.order_by(Sales.date_sold.desc())
+        for sale in total_sales:
             if sale.date_sold.strftime('%Y %m %d') == date:
                 number += 1
                 total_money += sale.price
@@ -108,6 +115,7 @@ def register():
         user = User(name=form.name.data, password=hashed_password, add_product=product_permission)
         db.session.add(user)
         db.session.commit()
+        # db.session.close()
         flash(f"Account created for {form.name.data}, you can now login ", 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
@@ -143,6 +151,7 @@ def login():
 
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
@@ -153,6 +162,7 @@ def logout():
 
 
 @app.route('/account', methods=['POST', 'GET'])
+@login_required
 def account():
     form = Updateform()
     if form.validate_on_submit():
@@ -170,6 +180,7 @@ def account():
             User.query.filter_by(name=current_user.name).update({User.name: form.name.data}) 
         
         db.session.commit()
+        # db.session.close()
 
         flash('Your account has been updated', 'success')
         return redirect(url_for('account'))
@@ -183,12 +194,17 @@ def account():
 
 
 
-@app.route('/account/delete/<string:account_name>/', methods=["POST', 'GET"])
+@app.route('/account/delete/<string:account_name>/')
+@login_required
 def delete_account(account_name):
+    if current_user.name != 'Adekunle Adebayo':
+        flash('You are not allowed to access this page', 'danger')
+        return redirect(url_for('sales'))
 
     user = User.query.filter_by(name=account_name).first()
     db.session.delete(user)
     db.session.commit()
+    # db.session.close()
 
     flash('This account has been deleted', 'success')
     return redirect(url_for('list_accounts'))
@@ -201,6 +217,8 @@ def delete_account(account_name):
 @app.route('/sales')
 @login_required
 def sales():
+    if current_user.name == 'Adekunle Adebayo':
+        return redirect(url_for('admin'))
     page = request.args.get('page', 1, type=int)
     all_sales = Sales.query.order_by(Sales.date_sold.desc()).paginate(page=page, per_page=7)
     return render_template('sales.html', title='Sales', all_sales=all_sales)
@@ -213,7 +231,7 @@ def sales():
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
+        return redirect(url_for('sales'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(name=form.name.data).first()
@@ -228,16 +246,16 @@ def reset_request():
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('sales'))
     user = User.query.filter_by(name=token).first()
-    if user is None:
-        return redirect(url_for('reset_request'))
+
     form = ResetPasswordForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user.password = hashed_password
         db.session.commit()
-        flash(f'Your password has been updated! You can now login', 'Success')
+        # db.session.close()
+        flash(f'Your password has been updated! You can now login', 'success')
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
 
@@ -262,10 +280,12 @@ def new_product():
                 item = Products(name=request.form.get('name'+str(i)),
                                 quantity=request.form.get('quantity'+str(i)),
                                 price=request.form.get('price'+str(i)),
-                                expiring_date=request.form.get('expiring_date'+str(i)))
+                                expiring_date=request.form.get('expiring_date'+str(i)),
+                                quantity_to_alert = request.form.get('quantity_to_alert'+str(i)))
                 db.session.add(item)
 
         db.session.commit()
+        # db.session.close()
         flash(f"{length} Product(s) Entered", 'success')
     return render_template('new_product.html', title='Add a new product')
 
@@ -294,7 +314,7 @@ def all_products():
 @app.route('/product/edit/<string:product_name>/', methods=['GET', 'POST'])
 @login_required
 def edit_product(product_name):
-    if current_user.name != 'Adekunle Adebayo':
+    if not current_user.add_product:
         flash('You are not allowed to access this page', 'danger')
         return redirect(url_for('sales'))
 
@@ -305,11 +325,13 @@ def edit_product(product_name):
         quantity = request.form.get('quantity')
         price = request.form.get('price')
         expiring_date = request.form.get('expiring_date')
+        quantity_to = request.form.get('quantity_to_alert')
 
-        update_dict = {Products.quantity:quantity, Products.price:price, Products.expiring_date:expiring_date}
+        update_dict = {Products.quantity:quantity, Products.price:price, Products.expiring_date:expiring_date, Products.quantity_to_alert:quantity_to}
 
         Products.query.filter_by(name=name).update(update_dict)
         db.session.commit()
+        # db.session.close()
 
         flash('You have successfully updated the details', 'success')
         return redirect(url_for('all_products'))
@@ -324,10 +346,14 @@ def edit_product(product_name):
 @app.route("/product/delete/<string:product_name>/", methods=['POST', 'GET'])
 @login_required
 def delete_product(product_name):
+    if current_user.name != 'Adekunle Adebayo':
+        flash('You are not allowed to access this page', 'danger')
+        return redirect(url_for('sales'))
     product = Products.query.filter_by(name=product_name).first()
     
     db.session.delete(product)
     db.session.commit()
+    # db.session.close()
 
     flash("The product have been deleted successfully", "success")
     return redirect(url_for("all_products"))
@@ -342,7 +368,7 @@ def delete_product(product_name):
 def previous_sales():
     if current_user.name != 'Adekunle Adebayo':
         flash("You are not allowed to access this page", "danger")
-        return redirect(url_for('login'))
+        return redirect(url_for('sales'))
     else:
         date = datetime.now().strftime('%Y %m %d')
         page = request.args.get('page', 1, type=int)
@@ -368,10 +394,23 @@ def new_sales():
             if len(request.form.get('name'+str(i))) != 0:
                 sale = Sales(name_of_item=request.form.get('name'+str(i)),
                             quantity=request.form.get('quantity'+str(i)),
-                            price=request.form.get('price'+str(i)),
-                            author=current_user)
+                            price=int(request.form.get('price'+str(i))),
+                            seller=current_user.name)
             db.session.add(sale)
+
+            product = Products.query.filter_by(name=request.form.get('name'+str(i))).first()
+            quantity_of_product = int(''.join([i for i in product.quantity if i.isnumeric()]))
+
+            new_quantity = (product.quantity).replace(str(quantity_of_product), str(quantity_of_product - int(request.form.get('quantity'+str(i)))))
+
+
+            update_dict = {Products.quantity:new_quantity}
+            Products.query.filter_by(name=request.form.get('name'+str(i))).update(update_dict)
+        
+
+
         db.session.commit()
+        # db.session.close()
         flash("Sales Entered", 'success')
         
     all_products = Products.query.order_by(Products.name)
@@ -387,9 +426,9 @@ def new_sales():
 
 
 
-@app.route('/notifications')
+@app.route('/soon_expire')
 @login_required
-def notification():
+def soon_expire():
     if current_user.name != 'Adekunle Adebayo':
         flash('You are not allowed to access this page', 'danger')
         return redirect(url_for('sales'))
@@ -402,9 +441,34 @@ def notification():
     for product in all_products.items:
         end_date = product.expiring_date[:10]
         start_date = datetime.strptime(today, "%Y-%m-%d")
-        end_date = datetime.strptime(end_date.replace(' ', '-'), "%Y-%m-%d")
+        end_date = datetime.strptime(end_date.replace(' ', '-'), "%d-%m-%Y")
 
         if (end_date - start_date).days <= 90:
             final_product.append(product.name)
 
-    return render_template('notifications.html', title='Sales', all_products=all_products, final_product=final_product)
+    return render_template('soon_expire.html', title='Soon Expire', all_products=all_products, final_product=final_product)
+
+
+
+
+
+
+@app.route('/out_of_stock')
+@login_required
+def out_of_stock():
+    if current_user.name != 'Adekunle Adebayo':
+        flash('You are not allowed to access this page', 'danger')
+        return redirect(url_for('sales'))
+
+
+    page = request.args.get('page', 1, type=int)
+    all_products = Products.query.order_by(Products.name).paginate(page=page, per_page=10)
+
+    final_product = []
+
+    for product in all_products.items:
+        quantity_of_product = int(''.join([i for i in product.quantity if i.isnumeric()]))
+        if quantity_of_product <= int(product.quantity_to_alert):
+            final_product.append(product.name)
+
+    return render_template('out_of_stock.html', title='Out of Stock', all_products=all_products, final_product=final_product)

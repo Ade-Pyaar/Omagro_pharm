@@ -15,7 +15,7 @@
           
           <!-- Modal footer -->
           <div class="modal-footer">
-            <a href="{{ url_for('delete_account') }}" class="btn btn-danger mr-5">Yes, delete</a>
+            <a href="{{ url_for('delete_account', account_name=form.name.data) }}" class="btn btn-danger mr-5">Yes, delete</a>
             <button type="button" class="btn btn-primary" data-dismiss="modal">No, close</button>
           </div>
           

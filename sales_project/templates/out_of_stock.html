@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h4 class="mb-3 ">Out of Stock</h4>
+    
+    {% for product in all_products.items %}
+        {% if product.name in final_product %}
+        <article class="media content-section">
+            <div class="media-body">
+                <h2 class="article-title">Name: {{ product.name }}</h2>
+                <p class="article-content">Quantity: {{ product.quantity }}</p>
+                <p class="article-content">Expiring Date: {{ product.expiring_date }}</p>
+            </div>
+        </article>
+        {% endif %}
+    {% endfor %}
+
+    {% for page_num in all_products.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if all_products.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('out_of_stock', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('out_of_stock', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

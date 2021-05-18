@@ -8,11 +8,11 @@
     </article>
     <h4 class="mb-3 ">------- Sales for Today -------</h4>
     {% for sale in all_sales.items %}
-        {% if sale.date_sold.strftime('%Y %m %d') == date%}
+        {% if sale.date_sold.strftime('%Y %m %d') == date %}
             <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">
-                <a class="mr-2" >Seller: {{ sale.author.name }}</a>
+                <a class="mr-2" >Seller: {{ sale.seller }}</a>
                 <p class="text-muted">Date: {{ sale.date_sold.strftime('%d-%m-%Y %H:%M') }}</p>
                 </div>
                 <h2 class="article-title">{{ sale.name_of_item }}</h2>

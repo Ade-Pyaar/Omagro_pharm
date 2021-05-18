@@ -1,7 +1,5 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <script type="text/javascript" src="{{ url_for('static', filename='dropdown.js') }}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dropdown.css') }}">
 
     {% for product in all_product.items %}
     <div class="col-lg-6">

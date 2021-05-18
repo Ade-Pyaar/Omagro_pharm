@@ -2,11 +2,14 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from decouple import config
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '55d9f0fc0cebfd1fad129ac6ad52058a'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///omagro.db'
+
+app.config["SECRET_KEY"] = config('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = config('SQLALCHEMY_DATABASE_URI')
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)

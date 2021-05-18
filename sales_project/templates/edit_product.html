@@ -1,7 +1,5 @@
 {% extends 'layout.html' %}
 {% block content %}
-<script type="text/javascript" src="{{ url_for('static', filename='dropdown.js') }}"></script>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dropdown.css') }}">
 
 <div class="container">
 
@@ -23,6 +21,9 @@
     </div>
 </div>
 
+<div class="container">
+    <a href="{{ url_for('all_products') }}" class="btn btn-primary">Go Back</a><br><br>
+
 <div class="content-section">
     <form method="POST" autocomplete="off">
         <fieldset class="form-group">
@@ -30,22 +31,26 @@
             <div class="form-group">
                 <label for="title">Product Name</label>
                 <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" readonly>
-                </div>
-                <div class="form-group">
-                <label for="password">Price</label>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
                 <input type="text" class="form-control" id="price" name="price" value="{{ product.price }}" required>
-                </div>
-                <div class="form-group">
-                <label for="password">Quantity</label>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
                 <input type="text" class="form-control" id="quantity" name="quantity" value="{{ product.quantity }}" required>
-                </div>
-                <div class="form-group">
-                <label for="password">Expiring Date</label>
-                <input type="text" class="form-control" id="expiring_date" name="expiring_date" value="{{ product.expiring_date }}">
-                </div>
+            </div>
+            <div class="form-group">
+                <label for="quantity_to_alert">Quantity To alert:</label>
+                <input type="text" class="form-control" id="quantity_to_alert" value="{{ product.quantity_to_alert }}" name="quantity_to_alert" required>
+            </div>
+            <div class="form-group">
+                <label for="expiring_date">Expiring Date</label>
+                <input type="text" class="form-control" id="expiring_date" name="expiring_date" value="{{ product.expiring_date }}" required>
+            </div>
         </fieldset>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Edit Product</button>
+            <button type="submit" class="btn btn-primary">Update Product</button>
         </div>
     </form>
     <div class="text-right">

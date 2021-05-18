@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     add_product = db.Column(db.Boolean, nullable=False)
     name = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    sales = db.relationship('Sales', backref='author', lazy=True)
+    # sales = db.relationship('Sales', backref='author', lazy=True)
 
     def __repr__(self):
         return f"User('{self.name}')"
@@ -24,7 +24,8 @@ class Sales(db.Model):
     name_of_item = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.String, nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    seller = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # seller = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    seller = db.Column(db.String(30), nullable=False)
     date_sold = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     def __repr__(self):
@@ -37,6 +38,7 @@ class Products(db.Model):
     quantity = db.Column(db.String(30), nullable=False)
     price = db.Column(db.Integer, nullable=False)
     expiring_date = db.Column(db.String(12), nullable=False)
+    quantity_to_alert = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return f"Product('{self.name}', '{self.price}')"

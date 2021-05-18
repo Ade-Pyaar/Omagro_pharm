@@ -24,7 +24,7 @@
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
           <div class="container">
-            <a class="navbar-brand mr-4" href="/">Omagro Pharmacy</a>
+            <a class="navbar-brand mr-4" href="/">Omagro Pharmaceuticals</a>
               {% if current_user.is_authenticated %}
                   {%if current_user.name == 'Adekunle Adebayo' %}
                       <a class="navbar-brand mr-4">Admin</a>
@@ -35,9 +35,8 @@
             <div class="navbar-nav">
                 {% if current_user.is_authenticated %}
                     {% if current_user.name == 'Adekunle Adebayo' %}
-                    <a class="nav-item nav-link" href="{{ url_for('notification') }}">Notifications</a>
                         <a class="nav-item nav-link" href="{{ url_for('admin') }}">Admin Page</a>
-                        <a class="nav-item nav-link" href="{{ url_for('sales') }}">Sales</a>
+  
                         <div class="navbar-nav">
                             <div class="dropdown">
                               <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
@@ -47,6 +46,8 @@
                                   <a class="dropdown-item" href="{{ url_for('all_products') }}">All Products</a>
                                   <a class="dropdown-item" href="{{ url_for('new_product') }}">Add a new product</a>
                                   <a class="dropdown-item" href="{{ url_for('previous_sales') }}">Previous Sales</a>
+                                  <a class="dropdown-item" href="{{ url_for('soon_expire') }}">Products that will soon expire</a>
+                                  <a class="dropdown-item" href="{{ url_for('out_of_stock') }}">Out of stock</a>
                                   <a class="dropdown-item" href="{{ url_for('account') }}">My Account</a>
                                   <a class="dropdown-item" href="{{ url_for('list_accounts') }}">All Accounts</a>
                                   <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>

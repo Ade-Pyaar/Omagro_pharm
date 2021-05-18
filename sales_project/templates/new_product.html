@@ -1,24 +1,28 @@
 {% extends 'custom_layout.html' %}
 {% block content %}
-    <a href="{{ url_for('all_products') }}" class="btn btn-primary">Go Back</a><br><br>
+    <a href="{{ url_for('sales') }}" class="btn btn-primary">Go Back</a><br><br>
     <p>New Products Form</p>
 
     <form class="form-inline" method="POST" autocomplete="off" id="my_form">
         <div class="form-group mr-3 mb-3">
-        <label for="name1">Name:</label>
-        <input type="text" class="form-control" id="name1" placeholder="Name of product" name="name1">
+            <label for="name1">Name:</label>
+            <input type="text" class="form-control" id="name1" placeholder="Name of product" name="name1">
         </div>
         <div class="form-group mr-3 mb-3">
-        <label for="price1">Price:</label>
-        <input type="text" class="form-control" id="price1" placeholder="Price" name="price1">
+            <label for="price1">Price:</label>
+            <input type="text" class="form-control" id="price1" placeholder="Price" name="price1" style="width: 75px;">
         </div>
         <div class="form-group mb-3 mr-3">
-        <label for="quantity1">Quantity:</label>
-        <input type="text" class="form-control" id="quantity1" placeholder="Quantity" name="quantity1">
+            <label for="quantity1">Quantity:</label>
+            <input type="text" class="form-control" id="quantity1" style="width: 200px;" placeholder="Quantity" name="quantity1">
+        </div>
+        <div class="form-group mb-3 mr-3">
+            <label for="quantity_to_alert1">Quantity To alert:</label>
+            <input type="text" class="form-control" id="quantity_to_alert1" style="width: 75px;" placeholder="Quantity To Alert" name="quantity_to_alert1">
         </div>
         <div class="form-group mb-3">
-        <label for="expiring_date1">Expiring Date:</label>
-        <input type="text" class="form-control" id="expiring_date1" placeholder="Expiring Date" name="expiring_date1">
+            <label for="expiring_date1">Expiring Date:</label>
+            <input type="text" class="form-control" id="expiring_date1" style="width: 200px;" placeholder="Day-month-year" name="expiring_date1">
         </div>
         
         
@@ -27,8 +31,8 @@
     <div class="text-right">
         <button type="submit" class="btn btn-success" form="my_form">Submit</button>
     </div>
-    <button id="add_form" class="btn btn-info">Add Form</button>
-
+    <button id="add_form" class="btn btn-info mb-3">Add Form</button>
+    
     <script>
         let form = document.querySelector('#my_form')
         let btn = document.querySelector('#add_form')
@@ -40,6 +44,7 @@
             let  newElement2 = document.createElement('div')
             let  newElement3 = document.createElement('div')
             let  newElement4 = document.createElement('div')
+            let  newElement5 = document.createElement('div')
 
             newElement.classList.add('mb-3')
             newElement.classList.add('mr-3')
@@ -57,28 +62,38 @@
             newElement4.classList.add('mr-3')
             newElement4.classList.add('form-group')
 
+            newElement5.classList.add('mb-3')
+            newElement5.classList.add('mr-3')
+            newElement5.classList.add('form-group')
+
             newElement.innerHTML = `
             <label for="name${window.num}">Name:</label>
             <input type="text" class="form-control" id="name${window.num}" placeholder="Name of product" name="name${window.num}">
             `
             newElement2.innerHTML = `
             <label for="price${window.num}">Price:</label>
-            <input type="text" class="form-control" id="price${window.num}" placeholder="Price" name="price${window.num}">
+            <input type="text" class="form-control" id="price${window.num}" style="width: 75px;" placeholder="Price" name="price${window.num}">
             `
 
             newElement3.innerHTML = `
             <label for="quantity${window.num}">Quantity:</label>
-            <input type="text" class="form-control" id="quantity${window.num}" placeholder="Quantity" name="quantity${window.num}">
+            <input type="text" class="form-control" id="quantity${window.num}" style="width: 200px;" placeholder="Quantity" name="quantity${window.num}">
             `
 
             newElement4.innerHTML = `
             <label for="expiring_date${window.num}">Expiring Date:</label>
-            <input type="text" class="form-control" id="expiring_date${window.num}" placeholder="Expiring Date" name="expiring_date${window.num}">
+            <input type="text" class="form-control" id="expiring_date${window.num}" style="width: 200px;" placeholder="Day-month-year" name="expiring_date${window.num}">
+            `
+
+            newElement5.innerHTML = `
+            <label for="quantity_to_alert${window.num}">Quantity To Alert:</label>
+            <input type="text" class="form-control" id="quantity_to_alert${window.num}" style="width: 75px;" placeholder="Quantity To Alert" name="quantity_to_alert${window.num}">
             `
 
             form.append(newElement)
             form.append(newElement2)
             form.append(newElement3)
+            form.append(newElement5)
             form.append(newElement4)
         })
     </script>
